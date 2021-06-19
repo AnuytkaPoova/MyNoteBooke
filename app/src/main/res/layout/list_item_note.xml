@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@color/purple_200">
+
+
+    <TextView
+        android:id="@+id/note_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="@dimen/_16dp"
+        android:layout_marginTop="16dp"
+        android:padding="@dimen/_4dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Note Title" />
+
+    <TextView
+        android:id="@+id/note_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:padding="@dimen/_4dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="@dimen/_16dp"
+        app:layout_constraintTop_toBottomOf="@+id/note_title"
+        tools:text="Note Date11111111111111111" />
+
+    <ImageView
+        android:id="@+id/note_solved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_16dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/note_date"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toEndOf="@+id/note_title"
+        app:layout_constraintTop_toTopOf="@+id/note_title"
+        app:srcCompat="@drawable/ic_baseline_insert_comment_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--
+app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/j"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <CheckBox
+        android:id="@+id/list_item_note_solved_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/_4dp"/>
+    <TextView
+        android:id="@+id/list_item_note_title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/list_item_note_solved_check_box"
+        android:textStyle="bold"
+        android:padding="@dimen/_4dp"
+        tools:text="Note Title"/>
+
+    <TextView
+        android:id="@+id/list_item_note_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/list_item_note_solved_check_box"
+        android:layout_below="@id/list_item_note_title_text_view"
+        android:padding="@dimen/_4dp"
+        tools:text="Note Date"/>
+
+</RelativeLayout>
+
+
+
+
+
+-->

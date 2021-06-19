@@ -13,8 +13,9 @@ public class Note {
 
     public  Note() {
         //генерирование уникаального идентификатора
-        mId = UUID.randomUUID();
-        mDate = new Date();
+        this.mId = UUID.randomUUID();
+        this.mDate = new Date();
+
     }
 
     public UUID getmId() {
