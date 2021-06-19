@@ -16,7 +16,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
         FragmentManager fm = getSupportFragmentManager();
-        /*
+        /**
         Идентификатор контейнерного представления выполняет две функции:
         - сообщает FragmentManager, где в представлении активности должно находиться представление фрагмента;
         - обеспечивает однозначную идентификацию фрагмента в списке FragmentManager.
