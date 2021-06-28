@@ -1,6 +1,7 @@
 package com.a_ches.mynotebooke;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,25 +17,40 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.UUID;
+
 //выдает информацию о заметке, обновляется пользователем
 
 public class NoteFragment extends Fragment {
-
+    public static final String  ARG_NOTE_ID = "note_id";
+    private static final String DIALOG_DATE = "DialogDate";
     private Note mNote;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    public static NoteFragment newInstance(UUID noteId) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_NOTE_ID, noteId);
 
+        NoteFragment fragment = new NoteFragment();
+        fragment.setArguments(args);
+        return  fragment;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNote = new Note();
+        //mNote = new Note();
+        //UUID noteID = (UUID) getActivity().getIntent()
+          //      .getSerializableExtra(MainActivity.EXTRA_NOTE_ID);
+        UUID noteID = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
+        mNote = NoteLab.get(getActivity()).getNote(noteID);
     }
 
    /*
@@ -51,6 +67,7 @@ LayoutInflater.inflate(…) с передачей идентификатора �
         View v = inflater.inflate(R.layout.fragment_note, container, false);
 
         mTitleField = (EditText)v.findViewById(R.id.note_title);
+        mTitleField.setText(mNote.getmTitle()); //новое
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -68,10 +85,19 @@ LayoutInflater.inflate(…) с передачей идентификатора �
         //Дата выводится на кнопку, чтобы можно было вставить пиккер
         mDateButton = (Button)v.findViewById(R.id.note_date);
         mDateButton.setText(mNote.getmDate().toString());
-        mDateButton.setEnabled(false); // блокировка кнопки
+        //mDateButton.setEnabled(false); // блокировка кнопки
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();//getFragmentManager()
+                DatePickerFragment dialog = new DatePickerFragment();
+                dialog.show(manager, DIALOG_DATE);//show(manager, DIALOG_DATE)
+            }
+        });
 
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.note_solved);
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mSolvedCheckBox.setChecked(mNote.ismSolved());
+        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { //CompoundButton нет в примере
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //Назначение выполнении замметки
@@ -79,6 +105,10 @@ LayoutInflater.inflate(…) с передачей идентификатора �
             }
         });
         return  v;
+    }
+    //приказываете активности-хосту вернуть значение;
+    public  void  returnResult() {
+        getActivity().setResult(Activity.RESULT_OK, null);
     }
 
     /*
