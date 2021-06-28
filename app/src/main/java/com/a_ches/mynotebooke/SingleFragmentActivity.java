@@ -31,14 +31,18 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
         setContentView(R.layout.activity_fragment);
         Toolbar toolbar = findViewById(R.id.toolbar); //R.id.toolbar
         setSupportActionBar(toolbar);
+        //новое
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         //мои добавления
-        DrawerLayout drawer = findViewById(R.id.fragment_container); //было R.id.drawer_layout  fragment_container
+        DrawerLayout drawer = findViewById(R.id.nav_drawer); //было R.id.drawer_layout  // стало fragment_container
         NavigationView navigationView = findViewById(R.id.nav_view); //было R.id.nav_view  nav_view_2
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
+                //.setDrawerLayout(drawer)
+                .setOpenableLayout(drawer)
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment); //было R.id.nav_host_fragment  fragment_container
@@ -51,12 +55,12 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
         - обеспечивает однозначную идентификацию фрагмента в списке FragmentManager.
          */
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+        Fragment fragment = fm.findFragmentById(R.id.nav_drawer); // было fragment_container
         // Fragment - получаем экземпляр NoteFragment по id контейнеру представления
         if (fragment == null) {
             fragment = createFragment();
             fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
+                    .add(R.id.nav_drawer, fragment) // было fragment_container
                     .commit();
         }
     }
