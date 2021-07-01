@@ -60,10 +60,19 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
         if (fragment == null) {
             fragment = createFragment();
             fm.beginTransaction()
-                    .add(R.id.nav_drawer, fragment) // было fragment_container
+                    .add(R.id.nav_host_fragment, fragment) // было fragment_container, nav_drawer
                     .commit();
         }
     }
+    /*
+    if (fragment == null) {
+fragment = createFragment();
+fm.beginTransaction()
+.add(R.id.nav_host_fragment, fragment) // было fragment_container
+.commit();
+}
+     */
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment); //было R.id.nav_host_fragment  fragment_container
