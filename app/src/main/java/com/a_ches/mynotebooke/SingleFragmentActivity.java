@@ -34,7 +34,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
         //новое
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         //мои добавления
         DrawerLayout drawer = findViewById(R.id.nav_drawer); //было R.id.drawer_layout  // стало fragment_container
         NavigationView navigationView = findViewById(R.id.nav_view); //было R.id.nav_view  nav_view_2
@@ -69,7 +68,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
 fragment = createFragment();
 fm.beginTransaction()
 .add(R.id.nav_host_fragment, fragment) // было fragment_container
-.commit();
+.commit();//
 }
      */
 
