@@ -3,10 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/new_note"
+        android:id="@+id/new_note_2"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/new_note"
         app:showAsAction="ifRoom|withText"/>
 
 
 </menu>
+
+<!--
+не использовать -  это меню не работает
+-->

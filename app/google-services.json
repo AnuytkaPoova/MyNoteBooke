@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "731046691074",
+    "project_id": "mynotebooke-ca2da",
+    "storage_bucket": "mynotebooke-ca2da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731046691074:android:2170ebc4c0abf2e647821b",
+        "android_client_info": {
+          "package_name": "com.a_ches.mynotebooke"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731046691074-8j2rfo0g9gsl95veeljmu8uop466qc42.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a_ches.mynotebooke",
+            "certificate_hash": "a041234f4892cde70dd3e61dc453035a811890be"
+          }
+        },
+        {
+          "client_id": "731046691074-f6eqi2tju7rmith4e998t340rhcb2b9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnA3iBHxGRmzugorrh2MLpHfkPZlgkAZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731046691074-f6eqi2tju7rmith4e998t340rhcb2b9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

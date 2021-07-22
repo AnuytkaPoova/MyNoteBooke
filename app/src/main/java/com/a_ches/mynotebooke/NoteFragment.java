@@ -2,6 +2,7 @@ package com.a_ches.mynotebooke;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,13 +24,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.Date;
 import java.util.UUID;
 
 //выдает информацию о заметке, обновляется пользователем
 
-public class NoteFragment extends Fragment {
+public class
+NoteFragment extends Fragment {
     public static final String  ARG_NOTE_ID = "note_id";
     private static final String DIALOG_DATE = "DialogDate";
+    private  static final int REQUEST_DATE = 0;
     private Note mNote;
     private EditText mTitleField;
     private Button mDateButton;
@@ -84,13 +88,15 @@ LayoutInflater.inflate(…) с передачей идентификатора �
         });
         //Дата выводится на кнопку, чтобы можно было вставить пиккер
         mDateButton = (Button)v.findViewById(R.id.note_date);
-        mDateButton.setText(mNote.getmDate().toString());
+        updateDate();
         //mDateButton.setEnabled(false); // блокировка кнопки
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();//getFragmentManager()
-                DatePickerFragment dialog = new DatePickerFragment();
+                //DatePickerFragment dialog = new DatePickerFragment();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mNote.getmDate());
+                dialog.setTargetFragment(NoteFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);//show(manager, DIALOG_DATE)
             }
         });
@@ -106,6 +112,24 @@ LayoutInflater.inflate(…) с передачей идентификатора �
         });
         return  v;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if ( requestCode == REQUEST_DATE) {
+            Date date = (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mNote.setmDate(date);
+            updateDate();
+        }
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mNote.getmDate().toString());
+    }
+
     //приказываете активности-хосту вернуть значение;
     public  void  returnResult() {
         getActivity().setResult(Activity.RESULT_OK, null);

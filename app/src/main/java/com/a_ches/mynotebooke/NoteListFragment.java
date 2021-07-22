@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,10 +37,11 @@ public class NoteListFragment extends Fragment {
     private RecyclerView mNoteRecyclerView;
     private NoteAdapter mAdapter;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_note_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_note_list, container, false);  // было fragment_note_list //menu
 
         mNoteRecyclerView = (RecyclerView) view.findViewById(R.id.note_recycler_view);
         mNoteRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -48,17 +50,39 @@ public class NoteListFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
         updateUI();
     }
 
+
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_note_list, menu);
+        inflater.inflate(R.menu.menu, menu); // заменила fragment_note_list на menu
     }
+   /*
+    //новое (для меню (добавления новой запсики) но меню в другом месте подключена)
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_note:
+                Note note = new Note();
+                NoteLab.get(getActivity()).addNote(note);
+                Intent intent = NotePagerActivity
+                        .newIntent(getActivity(), note.getmId());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    */
 
     private void updateUI() {
         NoteLab noteLab = NoteLab.get(getActivity());
@@ -115,12 +139,26 @@ public class NoteListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            /*
             Intent intent = MainActivity.newIntent(getActivity(), mNote.getmId());
             startActivity(intent);
+
+             */
+
+
             //Toast.makeText(getActivity(), mNote.getmTitle() + " cliched!", Toast.LENGTH_SHORT).show();
             //Intent intent = new Intent(getActivity(), MainActivity.class);
             //startActivityForResult(intent, REQUEST_NONE);
-            //Intent intent = NotePagerActivity.newIntent(getActivity(), mNote.getmId());
+
+             //не работает  NotePagerActivity
+            Intent intent = NotePagerActivity.newIntent(getActivity(), mNote.getmId());
+            startActivity(intent);
+            //Также необходимо добавить NotePagerActivity в манифест, чтобы ОС могла запустить эту активность.
+            // Пока манифест будет открыт, заодно удалите объявление MainActivity (у меня NoteListActivity).
+            // Для этого достаточно заменить в манифесте NoteActivity (NoteListActivity) на
+            //NotePagerActivity
+
+
         }
     }
 

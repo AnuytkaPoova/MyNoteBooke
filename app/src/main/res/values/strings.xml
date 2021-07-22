@@ -3,7 +3,7 @@
     <string name="note_title_hint">Enter a title for the note</string>
     <string name="note_title_label">Title</string>
     <string name="note_details_label">Details</string>
-    <string name="note_solved_label">Solved?</string>
+    <string name="note_solved_label">Done?</string>
 
     <string name="date_picker_title">Date of crime:</string>
     <string name="new_note">New Note</string>
@@ -21,4 +21,5 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="delete">delete</string>
 </resources>

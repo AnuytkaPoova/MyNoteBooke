@@ -7,19 +7,39 @@
     android:orientation="vertical"
     tools:context=".NoteListActivity">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/note_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16dp"
-        android:padding="5dp"/>
-
-
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/note_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16dp"
+            android:padding="5dp"
+            />
 
 
 </LinearLayout>
+
+
+    <!--
+    было3
+Swipe убрала
+       <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list_">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/note_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16dp"
+            android:padding="5dp"
+            />
+
+
+    </com.baoyz.swipemenulistview.SwipeMenuListView>
+
+        -->
+
 
 <!--
 Было2

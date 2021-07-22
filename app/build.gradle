@@ -1,8 +1,23 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
+
+    signingConfigs {
+        notes {
+            storeFile file('\\notesappkey.jks')
+            //'C:\\Users\\a_che\\AndroidStudioProjects\\MyNoteBooke\\app\\notesappkey.jks'
+            storePassword 'password'
+            keyAlias 'notes'
+            keyPassword 'password'
+        }
+    }
+
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -14,6 +29,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.notes
     }
 
     buildTypes {
@@ -21,6 +37,16 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+/*
+        debug {
+            signingConfig signingConfig.notes
+        }
+
+ */
+
+
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -40,9 +66,15 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     //implementation 'com.android.support:recyclerview-v7:28.0.0'
 
+    implementation platform('com.google.firebase:firebase-bom:28.2.1')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-firestore'
+
     //implementation 'com.android.support:support-v4:28.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //compile 'com.baoyz.swipemenulistview:library:1.3.0'
 
 }
