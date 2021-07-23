@@ -2,6 +2,7 @@ package com.a_ches.mynotebooke;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,30 +13,30 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.chip.ChipGroup;
-
-import java.util.UUID;
+import java.util.Date;
 
 //выдает информацию о заметке, обновляется пользователем
 
-public class NoteFragment extends Fragment {
+public class
+NoteFragment extends Fragment {
     public static final String  ARG_NOTE_ID = "note_id";
     private static final String DIALOG_DATE = "DialogDate";
+    private  static final int REQUEST_DATE = 0;
     private Note mNote;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mSaveButton;
+    private NotesFirestoreRepository notesFirestoreRepository = new NotesFirestoreRepository();
 
-    public static NoteFragment newInstance(UUID noteId) {
+    public static NoteFragment newInstance(String noteId) { // было (UUID noteId)
         Bundle args = new Bundle();
         args.putSerializable(ARG_NOTE_ID, noteId);
 
@@ -49,7 +50,7 @@ public class NoteFragment extends Fragment {
         //mNote = new Note();
         //UUID noteID = (UUID) getActivity().getIntent()
           //      .getSerializableExtra(MainActivity.EXTRA_NOTE_ID);
-        UUID noteID = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
+        String noteID = (String) getArguments().getSerializable(ARG_NOTE_ID); // было UUID noteID = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
         mNote = NoteLab.get(getActivity()).getNote(noteID);
     }
 
@@ -84,28 +85,74 @@ LayoutInflater.inflate(…) с передачей идентификатора �
         });
         //Дата выводится на кнопку, чтобы можно было вставить пиккер
         mDateButton = (Button)v.findViewById(R.id.note_date);
-        mDateButton.setText(mNote.getmDate().toString());
+        updateDate();
         //mDateButton.setEnabled(false); // блокировка кнопки
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();//getFragmentManager()
-                DatePickerFragment dialog = new DatePickerFragment();
+                //DatePickerFragment dialog = new DatePickerFragment();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mNote.getmDate());
+                dialog.setTargetFragment(NoteFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);//show(manager, DIALOG_DATE)
             }
         });
 
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.note_solved);
-        mSolvedCheckBox.setChecked(mNote.ismSolved());
+        /** Важно !!! было (mNote.getmSolved()) */
+        mSolvedCheckBox.setChecked(false); //было (mNote.getmSolved())
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { //CompoundButton нет в примере
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //Назначение выполнении замметки
-                mNote.setmSolved(isChecked);
+                /** Важно !!! было (isChecked) */
+                mNote.setmSolved(String.valueOf(isChecked)); //было (mNote.getmSolved())
             }
         });
+
+
+        mSaveButton = (Button) v.findViewById(R.id.note_save);
+        updateDate();
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getActivity(),  " cliched!", Toast.LENGTH_SHORT).show();
+                notesFirestoreRepository.add(mNote.getmTitle(), "false", new Callback<Note>() {
+                    @Override
+                    public void onSuccess(Note result) {
+                        /*
+                        bundle.putParcelable(ARG_NOTE, result);
+                        getParentFragmentManager().setFragmentResult(UPDATE_RESULT, bundle);
+                        // Общение между фрагментами (результат работы фрагмента)...
+                        myContext.getSupportFragmentManager().popBackStack();
+
+                         */
+                        Toast.makeText(getActivity(),  " saved!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
         return  v;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if ( requestCode == REQUEST_DATE) {
+            Date date = (Date) data
+                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mNote.setmDate(date);
+            updateDate();
+        }
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mNote.getmDate().toString());
+    }
+
     //приказываете активности-хосту вернуть значение;
     public  void  returnResult() {
         getActivity().setResult(Activity.RESULT_OK, null);
@@ -117,5 +164,6 @@ LayoutInflater.inflate(…) с передачей идентификатора �
 пользователя. После того как представление будет заполнено, метод получает
 ссылку на EditText и добавляет слушателя.
      */
+
 
 }

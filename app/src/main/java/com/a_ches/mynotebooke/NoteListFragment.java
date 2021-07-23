@@ -12,23 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.List;
-
-import static androidx.recyclerview.widget.RecyclerView.*;
 
 public class NoteListFragment extends Fragment {
 
@@ -36,17 +24,41 @@ public class NoteListFragment extends Fragment {
     private RecyclerView mNoteRecyclerView;
     private NoteAdapter mAdapter;
 
+    private NotesRepository notesRepository = new NotesFirestoreRepository();
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_note_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_note_list, container, false);  // было fragment_note_list //menu
 
         mNoteRecyclerView = (RecyclerView) view.findViewById(R.id.note_recycler_view);
         mNoteRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        /**НОВОЕ для теста
+        notesRepository.add("wertyu", false, new Callback<Note>() {
+            @Override
+            public void onSuccess(Note result) {
+                System.out.println();
+            }
+        });*/
+
+        /**НОВОЕ для базы*/
+
+        notesRepository.getNotes(new Callback<List<Note>>() {
+            @Override
+            public void onSuccess(List<Note> result) {
+                mAdapter.setData(result);
+                mAdapter.notifyDataSetChanged();
+
+            }
+        });
+
         updateUI();
         return view;
     }
+
+
 
     @Override
     public void onResume() {
@@ -54,11 +66,31 @@ public class NoteListFragment extends Fragment {
         updateUI();
     }
 
+
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_note_list, menu);
+        inflater.inflate(R.menu.menu, menu); // заменила fragment_note_list на menu
     }
+   /*
+    //новое (для меню (добавления новой запсики) но меню в другом месте подключена)
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_note:
+                Note note = new Note();
+                NoteLab.get(getActivity()).addNote(note);
+                Intent intent = NotePagerActivity
+                        .newIntent(getActivity(), note.getmId());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    */
 
     private void updateUI() {
         NoteLab noteLab = NoteLab.get(getActivity());
@@ -110,17 +142,32 @@ public class NoteListFragment extends Fragment {
             mTitleTextView.setText(mNote.getmTitle());
             mDateTextView.setText(mNote.getmDate().toString());
             //mSolvedCheckBox.setChecked(mNote.ismSolved());
-            mSolvedImageView.setVisibility(note.ismSolved() ? View.VISIBLE : View.GONE);
+            /** Убрана для теста firestore*/
+            //mSolvedImageView.setVisibility(note.getmSolved() ? View.VISIBLE : View.GONE);
         }
 
         @Override
         public void onClick(View v) {
+            /*
             Intent intent = MainActivity.newIntent(getActivity(), mNote.getmId());
             startActivity(intent);
+
+             */
+
+
             //Toast.makeText(getActivity(), mNote.getmTitle() + " cliched!", Toast.LENGTH_SHORT).show();
             //Intent intent = new Intent(getActivity(), MainActivity.class);
             //startActivityForResult(intent, REQUEST_NONE);
-            //Intent intent = NotePagerActivity.newIntent(getActivity(), mNote.getmId());
+
+             //не работает  NotePagerActivity
+            Intent intent = NotePagerActivity.newIntent(getActivity(), mNote.getmId()); // было до Firestor (getActivity(), mNote.getmId())
+            startActivity(intent);
+            //Также необходимо добавить NotePagerActivity в манифест, чтобы ОС могла запустить эту активность.
+            // Пока манифест будет открыт, заодно удалите объявление MainActivity (у меня NoteListActivity).
+            // Для этого достаточно заменить в манифесте NoteActivity (NoteListActivity) на
+            //NotePagerActivity
+
+
         }
     }
 
@@ -160,6 +207,12 @@ public class NoteListFragment extends Fragment {
         public int getItemCount() {
             return mNotes.size();
         }
+
+        public void setData(List<Note> toSet) {
+            mNotes.clear();
+            mNotes.addAll(toSet);
+        }
+
     }
 
     /*

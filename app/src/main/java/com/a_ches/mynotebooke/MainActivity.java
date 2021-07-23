@@ -22,11 +22,7 @@ public class MainActivity extends SingleFragmentActivity {
 
     private static  final String EXTRA_NOTE_ID = "com.a_ches.mynotebooke.note_id";
 
-
-
-
-
-    public static Intent newIntent(Context packageContext, UUID noteId) {
+    public static Intent newIntent(Context packageContext, String noteId) {  // было (Context packageContext, UUID noteId)
         Intent intent = new Intent(packageContext, MainActivity.class);
         intent.putExtra(EXTRA_NOTE_ID, noteId);
         return intent;
@@ -36,7 +32,7 @@ public class MainActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         //return new NoteFragment();
-        UUID noteId = (UUID) getIntent()
+        String noteId = (String) getIntent() // было UUID noteId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_NOTE_ID);
         return NoteFragment.newInstance(noteId);
     }

@@ -3,18 +3,14 @@ package com.a_ches.mynotebooke;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ViewParent;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,9 +21,9 @@ public class NotePagerActivity  extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<Note> mNotes;
 
-    public static Intent newIntent(Context packageContext, UUID noteId) {
+    public static Intent newIntent(Context packageContext, String Id) { //было до firestore (Context packageContext, UUID noteId)
         Intent intent = new Intent(packageContext, NotePagerActivity.class);
-        intent.putExtra(EXTRA_NOTE_ID, noteId);
+        intent.putExtra(EXTRA_NOTE_ID, Id); // (EXTRA_NOTE_ID, noteId)
         return intent;
     }
 
@@ -36,14 +32,16 @@ public class NotePagerActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_pager);
 
-        UUID noteId = (UUID) getIntent()
+
+        String noteId = (String) getIntent() // было UUID noteId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_NOTE_ID);
 
-        mViewPager = (ViewPager) findViewById(R.id.activity_note_pager_view_pager);
+
+        mViewPager = (ViewPager) findViewById(R.id.note_view_pager);
         mNotes = NoteLab.get(this).getNotes();
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        mViewPager.setAdapter(new  FragmentPagerAdapter(fragmentManager) {// замена FragmentStatePagerAdapter
+        mViewPager.setAdapter(new  FragmentStatePagerAdapter(fragmentManager) {// замена FragmentStatePagerAdapter
             /*
             @Override
             public int getItemCount() {
@@ -65,7 +63,7 @@ public class NotePagerActivity  extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 Note note = mNotes.get(position);
-                return NoteFragment.newInstance(note.getmId());
+                return NoteFragment.newInstance(note.getmId()); // было note.getmId()
             }
 
             @Override
@@ -75,5 +73,15 @@ public class NotePagerActivity  extends AppCompatActivity {
 
 
         });
+        if (noteId != null) {
+            for (int i = 0; i < mNotes.size() ; i++) {
+                if (mNotes.get(i).getmId().equals(noteId)) {
+                    mViewPager.setCurrentItem(i);
+                    break;
+                }
+
+            }
+        }
+
     }
 }
