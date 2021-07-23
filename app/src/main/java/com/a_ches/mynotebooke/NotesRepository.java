@@ -16,7 +16,7 @@ public interface NotesRepository {
 
 
 
-    void add(String title, boolean solved, Callback<Note> callback);
+    void add(String title, String solved, Callback<Note> callback); // было (String title, boolean solved, Callback<Note> callback)
 
     void remove(Note note, Callback<Object> callback);
 

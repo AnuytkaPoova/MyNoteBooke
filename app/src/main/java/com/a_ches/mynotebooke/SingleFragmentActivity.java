@@ -25,9 +25,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.UUID;
+
 public abstract class SingleFragmentActivity extends AppCompatActivity { // FragmentActivity
     protected abstract Fragment createFragment();
     private AppBarConfiguration mAppBarConfiguration;
+
+    private final NotesRepository repository = NotesFirestoreRepository.INSTANCE;//из урока
+
+    private NotesRepository notesRepository = new NotesFirestoreRepository(); //для теста
+
     //private Note noteListFragment;
 
     @Override
@@ -87,6 +94,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
 
  */
 
+    /**Было у меня до внедрения Firestore
+     **/
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -94,8 +103,16 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
                 Note note = new Note();
                 NoteLab.get(getApplication()).addNote(note); // было NoteLab.get(getActivity()).addNote(note);
                 Intent intent = NotePagerActivity
-                        .newIntent(getApplication(), note.getmId());
+                        .newIntent(getApplication(), note.getmId()); // до добавление Firestore было getApplication(), note.getmId()
                 startActivity(intent);
+
+                /**НОВОЕ для теста*/
+                notesRepository.add("wertyu", "false", new Callback<Note>() {
+                    @Override
+                    public void onSuccess(Note result) {
+                        System.out.println();
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -104,12 +121,64 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { // Frag
         }
     }
 
+
+
+
+     /** по уроку - надо включить в мой код
+      *
+      *
+     @Override
+     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+     switch (item.getItemId()) {
+     case R.id.new_note:
+     Note note = new Note();
+     NoteLab.get(getApplication()).addNote(note); // было NoteLab.get(getActivity()).addNote(note);
+     Intent intent = NotePagerActivity
+     .newIntent(getApplication(), note.getmId());
+     startActivity(intent);
+     return true;
+     default:
+     return super.onOptionsItemSelected(item);
+
+
+     }
+     }
+      */
+
+
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment); //было R.id.nav_host_fragment  fragment_container
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    /**
+     toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+    if (item.getItemId() == R.id.action_add) {
+    repository.add("This is new added title", "https://cdn.pixabay.com/photo/2020/04/17/16/48/marguerite-5056063_1280.jpg", new Callback<Note>() {
+    @Override
+    public void onSuccess(Note result) {
+    int index = notesAdapter.add(result);
+    notesAdapter.notifyItemInserted(index);
+    notesList.scrollToPosition(index);
+    }
+    });
+    return true;
+    }
+    if (item.getItemId() == R.id.action_clear) {
+    repository.clear();
+    notesAdapter.setData(Collections.emptyList());
+    notesAdapter.notifyDataSetChanged();
+    return true;
+    }
+    return false;
+    }
+    });
+     */
 
 
 

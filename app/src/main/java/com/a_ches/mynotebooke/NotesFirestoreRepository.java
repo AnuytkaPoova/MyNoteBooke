@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -17,14 +18,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class notesFirestoreRepository implements NotesRepository {
+public class NotesFirestoreRepository implements NotesRepository {
 
-    public static final NotesRepository INSTANCE = new notesFirestoreRepository();
+    public static final NotesRepository INSTANCE = new NotesFirestoreRepository();
     private final static String NOTES = "notes";
     private final static String DATE = "date";
     private final static String TITLE = "title";
     //private final static String IMAGE = "image"; Solved
-    private final static boolean SOLVED = false;
+    private final static String SOLVED = "false"; // было boolean SOLVED = false
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
@@ -35,7 +36,7 @@ public class notesFirestoreRepository implements NotesRepository {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
+                        /*
                         if (task.isSuccessful()) {
 
                             ArrayList<Note> result = new ArrayList<>();
@@ -55,6 +56,33 @@ public class notesFirestoreRepository implements NotesRepository {
                         }
                     }
                 });
+
+                         */
+                        if (task.isSuccessful()) {
+
+                            ArrayList<Note> result = new ArrayList<>();
+
+                            QuerySnapshot tasks = task.getResult();
+                            if( tasks == null ) {
+                                return;
+                            }
+                            List<DocumentSnapshot> docs = tasks.getDocuments();
+
+                            for (DocumentSnapshot document : docs) {
+                                String title = (String) document.get(TITLE);
+                                //String image = (String) document.get(IMAGE);
+                                String solved = (String) document.get(SOLVED); // было  Boolean solved = (Boolean) document.get(String.valueOf(SOLVED))
+                                Date date = ((Timestamp) document.get(DATE)).toDate();
+
+                                result.add(new Note(document.getId(), title, solved, date)); // было new Note(document.getId(), title, image, date)
+                            }
+                            callback.onSuccess(result);
+
+                        } else {
+                            task.getException();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -62,14 +90,14 @@ public class notesFirestoreRepository implements NotesRepository {
 
     }
     @Override
-    public void add(String title, boolean solved, com.a_ches.mynotebooke.Callback<Note> callback) { // String title, String imageUrl, Callback<Note> callback
+    public void add(String title, String solved, com.a_ches.mynotebooke.Callback<Note> callback) { // String title, String imageUrl, Callback<Note> callback
         HashMap<String, Object> data = new HashMap<>();
 
         Date date = new Date();
 
         data.put(TITLE, title);
         //data.put(IMAGE, imageUrl);
-        data.put(String.valueOf(SOLVED), solved); //Под вопросом, SOLVED String или solved к boolean
+        data.put(SOLVED, solved); //Под вопросом, SOLVED String или solved к boolean
         data.put(DATE, date);
 
         firebaseFirestore.collection(NOTES)

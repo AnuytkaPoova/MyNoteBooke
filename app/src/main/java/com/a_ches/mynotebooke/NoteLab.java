@@ -60,7 +60,9 @@ public class NoteLab  {
         return mNotes;
     }
 
-    public Note getNote(UUID id) {
+
+    public Note getNote(String id) { // (UUID id)
+
         for (Note note: mNotes) {
             if (note.getmId().equals(id)) {
                 return note;

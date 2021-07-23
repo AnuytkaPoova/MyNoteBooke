@@ -13,19 +13,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.chip.ChipGroup;
-
 import java.util.Date;
-import java.util.UUID;
 
 //выдает информацию о заметке, обновляется пользователем
 
@@ -38,8 +33,10 @@ NoteFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mSaveButton;
+    private NotesFirestoreRepository notesFirestoreRepository = new NotesFirestoreRepository();
 
-    public static NoteFragment newInstance(UUID noteId) {
+    public static NoteFragment newInstance(String noteId) { // было (UUID noteId)
         Bundle args = new Bundle();
         args.putSerializable(ARG_NOTE_ID, noteId);
 
@@ -53,7 +50,7 @@ NoteFragment extends Fragment {
         //mNote = new Note();
         //UUID noteID = (UUID) getActivity().getIntent()
           //      .getSerializableExtra(MainActivity.EXTRA_NOTE_ID);
-        UUID noteID = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
+        String noteID = (String) getArguments().getSerializable(ARG_NOTE_ID); // было UUID noteID = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
         mNote = NoteLab.get(getActivity()).getNote(noteID);
     }
 
@@ -102,14 +99,40 @@ LayoutInflater.inflate(…) с передачей идентификатора �
         });
 
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.note_solved);
-        mSolvedCheckBox.setChecked(mNote.ismSolved());
+        /** Важно !!! было (mNote.getmSolved()) */
+        mSolvedCheckBox.setChecked(false); //было (mNote.getmSolved())
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { //CompoundButton нет в примере
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //Назначение выполнении замметки
-                mNote.setmSolved(isChecked);
+                /** Важно !!! было (isChecked) */
+                mNote.setmSolved(String.valueOf(isChecked)); //было (mNote.getmSolved())
             }
         });
+
+
+        mSaveButton = (Button) v.findViewById(R.id.note_save);
+        updateDate();
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getActivity(),  " cliched!", Toast.LENGTH_SHORT).show();
+                notesFirestoreRepository.add(mNote.getmTitle(), "false", new Callback<Note>() {
+                    @Override
+                    public void onSuccess(Note result) {
+                        /*
+                        bundle.putParcelable(ARG_NOTE, result);
+                        getParentFragmentManager().setFragmentResult(UPDATE_RESULT, bundle);
+                        // Общение между фрагментами (результат работы фрагмента)...
+                        myContext.getSupportFragmentManager().popBackStack();
+
+                         */
+                        Toast.makeText(getActivity(),  " saved!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
         return  v;
     }
 
@@ -141,5 +164,6 @@ LayoutInflater.inflate(…) с передачей идентификатора �
 пользователя. После того как представление будет заполнено, метод получает
 ссылку на EditText и добавляет слушателя.
      */
+
 
 }

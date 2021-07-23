@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "731046691074-umunnsd8345n0dek558utilme252h2os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a_ches.mynotebooke",
+            "certificate_hash": "5c76e8697a9e6c8b96be44f8f946fc6793ab9afd"
+          }
+        },
+        {
           "client_id": "731046691074-f6eqi2tju7rmith4e998t340rhcb2b9s.apps.googleusercontent.com",
           "client_type": 3
         }

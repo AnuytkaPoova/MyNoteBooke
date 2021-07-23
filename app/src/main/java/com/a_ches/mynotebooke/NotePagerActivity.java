@@ -21,9 +21,9 @@ public class NotePagerActivity  extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<Note> mNotes;
 
-    public static Intent newIntent(Context packageContext, UUID noteId) {
+    public static Intent newIntent(Context packageContext, String Id) { //было до firestore (Context packageContext, UUID noteId)
         Intent intent = new Intent(packageContext, NotePagerActivity.class);
-        intent.putExtra(EXTRA_NOTE_ID, noteId);
+        intent.putExtra(EXTRA_NOTE_ID, Id); // (EXTRA_NOTE_ID, noteId)
         return intent;
     }
 
@@ -32,7 +32,8 @@ public class NotePagerActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_pager);
 
-        UUID noteId = (UUID) getIntent()
+
+        String noteId = (String) getIntent() // было UUID noteId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_NOTE_ID);
 
 
@@ -62,7 +63,7 @@ public class NotePagerActivity  extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 Note note = mNotes.get(position);
-                return NoteFragment.newInstance(note.getmId());
+                return NoteFragment.newInstance(note.getmId()); // было note.getmId()
             }
 
             @Override
@@ -72,13 +73,15 @@ public class NotePagerActivity  extends AppCompatActivity {
 
 
         });
+        if (noteId != null) {
+            for (int i = 0; i < mNotes.size() ; i++) {
+                if (mNotes.get(i).getmId().equals(noteId)) {
+                    mViewPager.setCurrentItem(i);
+                    break;
+                }
 
-        for (int i = 0; i < mNotes.size() ; i++) {
-            if (mNotes.get(i).getmId().equals(noteId)) {
-                mViewPager.setCurrentItem(i);
-                break;
             }
-
         }
+
     }
 }

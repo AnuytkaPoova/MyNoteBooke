@@ -9,8 +9,10 @@ android {
 
     signingConfigs {
         notes {
-            storeFile file('\\notesappkey.jks')
+            storeFile file('C:\\Users\\a_che\\AndroidStudioProjects\\MyNoteBooke\\app\\notesappkey.jks')
             //'C:\\Users\\a_che\\AndroidStudioProjects\\MyNoteBooke\\app\\notesappkey.jks'
+            //\notesappkey.jks
+            //.\notesappkey.jks
             storePassword 'password'
             keyAlias 'notes'
             keyPassword 'password'
