@@ -12,7 +12,7 @@ public interface NotesRepository {
 
     void getNotes(Callback<List<Note>> callback);
 
-    void clear();
+    void clear(Note note, Callback<Note> callback);
 
 
 

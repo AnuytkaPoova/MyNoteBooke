@@ -2,6 +2,7 @@ package com.a_ches.mynotebooke;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,8 +18,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Date;
 
@@ -133,8 +137,53 @@ LayoutInflater.inflate(…) с передачей идентификатора �
             }
         });
 
+        mSaveButton = (Button) v.findViewById(R.id.note_delete);
+        //updateDate();
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertDialog();
+                //Toast.makeText(getActivity(),  " cliched!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return  v;
     }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.alert_dialog_title)
+                .setMessage(R.string.alert_dialog_message)
+                .setIcon(R.drawable.ic_baseline_clear_24)
+                .setCancelable(false)
+                .setPositiveButton(R.string.btn_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Snackbar.make(getView(), "Процесс удаления с экрана еще в доработке", Snackbar.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(),  " DELETE!", Toast.LENGTH_LONG).show();
+                        notesFirestoreRepository.clear(mNote ,  new Callback<Note>() { //mNote.getmId()
+
+                            @Override
+                            public void onSuccess(Note result) {
+
+                                Toast.makeText(getActivity(),  " DELETE!", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(R.string.btn_negative, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Snackbar.make(getView(), "Отмена удаления", Snackbar.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(),  " EXIT!", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        builder.show();
+    }
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
